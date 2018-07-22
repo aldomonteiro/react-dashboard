@@ -12,9 +12,14 @@ import {
 import s from './PostList.scss';
 import withMeta from '../../../core/withMeta';
 import Widget from '../../../components/Widget';
-import { fetchPosts } from '../../../actions/posts';
+import { fetchPosts, deletePost } from '../../../actions/posts';
 
 class PostList extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     posts: PropTypes.array, // eslint-disable-line
@@ -33,6 +38,19 @@ class PostList extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(fetchPosts());
+  }
+
+  handleRemove(id, e) {
+    this.props.dispatch(
+        deletePost({
+          id: id,
+        }),
+      )
+      .then(() => {
+        this.props.dispatch(fetchPosts());
+      });
+    e.preventDefault();
+    alert("post id:" + id);
   }
 
   render() {
@@ -65,6 +83,7 @@ class PostList extends React.Component {
                 <th>Title</th>
                 <th>Content</th>
                 <th>Last Updated</th>
+                <th>#</th>
               </tr>
               </thead>
               <tbody>
@@ -74,6 +93,11 @@ class PostList extends React.Component {
                   <td>{post.title}</td>
                   <td>{post.content.slice(0, 80)}...</td>
                   <td>{new Date(post.updatedAt).toLocaleString()}</td>
+                  <td>
+                  <button onClick={(e) => this.handleRemove(post.id, e)} type="button" class="btn btn-default">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </button>
+                  </td>
                 </tr>
               ))}
               {this.props.posts &&

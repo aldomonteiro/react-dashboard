@@ -1,12 +1,13 @@
 import {
   GraphQLString as StringType,
   GraphQLNonNull as NonNull,
+  GraphQLID as UUIDType,
 } from 'graphql';
 
 import PostType from '../types/PostType';
 import Post from '../models/Post';
 
-const addPost = {
+export const addPost = {
   type: PostType,
   description: 'Add a Post',
   args: {
@@ -22,4 +23,18 @@ const addPost = {
   resolve: (root, { title, content }) => Post.create({ title, content }),
 };
 
-export default addPost;
+export const removePost = {
+  type: PostType,
+  description: 'Delete a Post',
+  args: {
+    _id: {
+      type: new NonNull(UUIDType),
+    },
+  },
+  resolve: (root, _id) => Post.destroy({
+                            where: 
+                            { 
+                              id: _id
+                            }
+                          }),
+};

@@ -6,7 +6,7 @@ import {
 import me from './queries/me';
 import news from './queries/news';
 import posts from './queries/posts';
-import addPost from './mutations/posts';
+import { addPost, removePost } from './mutations/posts';
 
 const schemaConfig = {
   query: new ObjectType({
@@ -25,6 +25,7 @@ if (__DEV__) {
     name: 'Mutation',
     fields: {
       addPost,
+      removePost,
     },
   });
 }
